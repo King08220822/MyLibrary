@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Borrowed Books</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f5f7fa;
+            padding: 20px;
+            margin: 0;
+            color: #333;
+        }
+
+        h2 {
+            text-align: center;
+            margin-top: 40px;
+            color: #2c3e50;
+        }
+
+        .book-list {
+            max-width: 800px;
+            margin: 40px auto;
+        }
+
+        .book {
+            background: white;
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .book h3 {
+            margin: 0 0 10px;
+        }
+
+        .book p {
+            margin: 5px 0;
+        }
+
+        .return-button {
+            display: inline-block;
+            margin-top: 10px;
+            background-color: #27ae60;
+            color: white;
+            padding: 10px 14px;
+            border-radius: 6px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .return-button:hover {
+            background-color: #219150;
+        }
+
+        .overdue {
+            color: red;
+        }
+
+        /* ✅ 新漢堡選單樣式 (來自第一段) */
+        .menu-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 999;
+        }
+
+        .menu-button {
+            width: 40px;
+            height: 40px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            padding: 0;
+        }
+
+        .menu-button span {
+            display: block;
+            height: 3px;
+            width: 24px;
+            background-color: #333;
+            margin: 5px auto;
+            transition: all 0.3s ease;
+        }
+
+        .menu-items {
+            display: none;
+            flex-direction: column;
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .menu-items a {
+            padding: 10px 16px;
+            text-decoration: none;
+            color: #2c3e50;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+
+        .menu-items a:hover {
+            background-color: #f4f4f4;
+        }
+
+        .menu-items a:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+
+<!-- ✅ 新漢堡選單 -->
+<div class="menu-container">
+    <button class="menu-button" onclick="toggleMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+    <div class="menu-items" id="menuItems">
+        <a href="/member">🏠 Home Page</a>
+        <a href="/records">📖 Borrow Records</a>
+        <a href="/search-book">🔍 Search books</a>
+        <a href="/books">📚 Booklists</a>
+    </div>
+</div>
+
+<h2>📚 Your Borrowed Books</h2>
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div style="max-width: 800px; margin: auto; margin-bottom: 20px; padding: 10px; background-color: #d4edda; color: #155724; border-radius: 5px; border: 1px solid #c3e6cb;">
+    {% for message in messages %}
+        <p>{{ message }}</p>
+    {% endfor %}
+</div>
+{% endif %}
+{% endwith %}
+
+<div class="book-list">
+    {% for book in borrowed_books %}
+    <div class="book">
+        <h3>{{ book.book_title }}</h3>
+        <p>Due Date: {{ book.due_date.strftime('%Y-%m-%d') }}</p>
+        <p>
+            {% if book.days_left < 0 %}
+                <strong class="overdue">Overdue {{ book.days_left | abs }} days</strong>
+            {% else %}
+                {{ book.days_left }} days remaining
+            {% endif %}
+        </p>
+        <form method="POST" action="{{ url_for('return_book') }}">
+            <input type="hidden" name="book_id" value="{{ book.book_id }}">
+            <button type="submit" class="return-button">Return</button>
+        </form>
+    </div>
+    {% else %}
+    <p>No borrowed books found.</p>
+    {% endfor %}
+</div>
+
+<!-- ✅ JS：開啟/關閉選單 -->
+<script>
+    function toggleMenu() {
+        const menu = document.getElementById('menuItems');
+        menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    document.addEventListener('click', function(event) {
+        const menu = document.getElementById('menuItems');
+        const button = document.querySelector('.menu-button');
+        if (!button.contains(event.target) && !menu.contains(event.target)) {
+            menu.style.display = 'none';
+        }
+    });
+</script>
+
+</body>
+</html>

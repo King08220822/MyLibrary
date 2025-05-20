@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>借閱紀錄</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f7f9fc;
+            color: #333;
+            padding: 40px;
+            margin: 0;
+        }
+
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+        }
+
+        .book-title {
+            font-weight: bold;
+            font-size: 18px;
+            color: #34495e;
+        }
+
+        .borrow-time {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+
+        .menu-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 999;
+}
+
+.menu-button {
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    padding: 0;
+}
+
+.menu-button span {
+    display: block;
+    height: 3px;
+    width: 24px;
+    background-color: #333;
+    margin: 5px auto;
+    transition: all 0.3s ease;
+}
+
+.menu-items {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 50px;
+    right: 0;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.menu-items a {
+    padding: 10px 16px;
+    text-decoration: none;
+    color: #2c3e50;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+}
+
+.menu-items a:hover {
+    background-color: #f4f4f4;
+}
+
+.menu-items a:last-child {
+    border-bottom: none;
+}
+
+    </style>
+</head>
+<body>
+    <!-- 右上角漢堡選單 -->
+<div class="menu-container">
+    <button class="menu-button" onclick="toggleMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+    <div class="menu-items" id="menuItems">
+        <a href="/member">🏠 Home Page</a>
+        <a href="/search-book">🔍 Search Books</a>
+        <a href="books">📚 Booklists</a>
+        <a href="/borrowed_books">📚 Your Borrowed Books</a>
+    </div>
+</div>
+
+    <h2>📘 Your borrowing record</h2>
+    <ul>
+        {% for r in records %}
+        <li>
+            <div class="book-title">{{ r.book_title }}</div>
+            <div class="borrow-time">Borrowing time：{{ r.borrow_time }}</div>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <script>
+    function toggleMenu() {
+        const menu = document.getElementById('menuItems');
+        menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    document.addEventListener('click', function(event) {
+        const menu = document.getElementById('menuItems');
+        const button = document.querySelector('.menu-button');
+        if (!button.contains(event.target) && !menu.contains(event.target)) {
+            menu.style.display = 'none';
+        }
+    });
+</script>
+
+</body>
+</html>

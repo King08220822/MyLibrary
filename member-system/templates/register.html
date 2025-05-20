@@ -1,0 +1,125 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Sign Up</title>
+    <style>
+    body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        background-image: url("/static/images/111.jpg");
+        background-size: cover;
+        background-position: center;
+        position: relative;
+    }
+
+    body::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background-color: rgba(0, 0, 0, 0.4);
+        z-index: 0;
+    }
+
+    .card {
+        position: relative;
+        z-index: 1;
+        background: #fff;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        width: 100%;
+        max-width: 420px;
+        animation: slideIn 0.5s ease;
+    }
+
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 25px;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 16px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 15px;
+    }
+
+    input:focus {
+        border-color: #28a745;
+        outline: none;
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+        background-color: #28a745;
+        border: none;
+        color: white;
+        font-size: 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #1e7e34;
+    }
+
+    .footer {
+        text-align: center;
+        margin-top: 16px;
+        font-size: 14px;
+        color: #555;
+    }
+
+    .footer a {
+        color: #28a745;
+        text-decoration: none;
+    }
+
+    .footer a:hover {
+        text-decoration: underline;
+    }
+
+    .tip {
+        font-size: 13px;
+        color: #777;
+        text-align: center;
+        margin-top: 12px;
+    }
+</style>
+    </head>
+    <body>
+
+    <div class="card">
+        <h2>Create Your Account 🚀</h2>
+        <form action="/signup" method="POST">
+        <input type="text" name="nickname" placeholder="Your Name" required />
+        <input type="text" name="email" placeholder="Email Address" required />
+        <input type="password" name="password" placeholder="Password" required />
+        <button type="submit">Sign Up</button>
+        </form>
+        <div class="footer">
+        Already registered? <a href="/signin">Sign in here</a>
+        </div>
+        
+    </div>
+
+    </body>
+    </html>

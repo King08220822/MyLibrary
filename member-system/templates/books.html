@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>書籍清單</title>
+    <style>
+        body {
+            font-family: "Helvetica Neue", sans-serif;
+            background-color: #f9fafc;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .book-container {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            width: 700px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: #f4f8fb;
+            border: 1px solid #e1e8ed;
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .book-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .book-meta {
+            margin-top: 6px;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .actions {
+            margin-top: 10px;
+        }
+
+        .actions a,
+        .actions span {
+            display: inline-block;
+            margin-right: 12px;
+            padding: 6px 12px;
+            border-radius: 5px;
+            font-size: 14px;
+            text-decoration: none;
+        }
+
+        .actions a.borrow {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .actions a.delete {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .actions span.unavailable {
+            background-color: #ccc;
+            color: #444;
+            cursor: not-allowed;
+        }
+
+        .actions a:hover {
+            opacity: 0.9;
+        }
+
+        .menu-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 999;
+}
+
+.menu-button {
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    padding: 0;
+}
+
+.menu-button span {
+    display: block;
+    height: 3px;
+    width: 24px;
+    background-color: #333;
+    margin: 5px auto;
+    transition: all 0.3s ease;
+}
+
+.menu-items {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 50px;
+    right: 0;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.menu-items a {
+    padding: 10px 16px;
+    text-decoration: none;
+    color: #2c3e50;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+}
+
+.menu-items a:hover {
+    background-color: #f4f4f4;
+}
+
+.menu-items a:last-child {
+    border-bottom: none;
+}
+
+    </style>
+</head>
+<body>
+    <!-- 漢堡選單 -->
+    <div class="menu-container">
+        <button class="menu-button" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <div class="menu-items" id="menuItems">
+            <a href="/member">🏠 Home Page</a>
+            <a href="/records">📖 Borrow Records</a>
+            <a href="/search-book">🔍 Search books</a>
+            <a href="/borrowed_books">📚 Your Borrowed Books</a>
+        </div>
+    </div>
+
+    <div class="book-container">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div style="background-color: #dff0d8;
+                            border: 1px solid #d0e9c6;
+                            padding: 10px;
+                            margin-bottom: 20px;
+                            border-radius: 8px;
+                            color: #3c763d;">
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <h2>📚 Booklists</h2>
+        <ul>
+            {% for book in books %}
+            <li>
+                <div class="book-title">{{ book.title }}</div>
+                <div class="book-meta">author：{{ book.author }}</div>
+                <div class="book-meta">Joiner：{{ book.added_by if book.added_by else '未知' }}</div>
+                <div class="actions">
+                    {% if book.status == 'available' %}
+                        <a href="/borrow/{{ book._id }}" class="borrow">Borrow</a>
+                    {% else %}
+                        <span class="unavailable">🔒 Not in Library</span>
+                    {% endif %}
+                    <a href="/delete-book/{{ book._id }}" class="delete" onclick="return confirm('確定要刪除這本書嗎？');">Remove</a>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <script>
+    function toggleMenu() {
+        const menu = document.getElementById('menuItems');
+        menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    document.addEventListener('click', function(event) {
+        const menu = document.getElementById('menuItems');
+        const button = document.querySelector('.menu-button');
+        if (!button.contains(event.target) && !menu.contains(event.target)) {
+            menu.style.display = 'none';
+        }
+    });
+</script>
+
+    
+
+</body>
+</html>
